@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { History as HistoryIcon, Trash2 } from 'lucide-react'
+import { History as HistoryIcon, Trash2, ChevronRight } from 'lucide-react'
 import { getScanHistory, clearScanHistory, type ScanHistoryEntry } from '@/lib/scanHistory'
-import { AppHeader } from '@/components/AppHeader'
+import { relativeTime } from '@/lib/relativeTime'
+import { BottomTabBar } from '@/components/BottomTabBar'
 import { EmptyState } from '@/components/EmptyState'
 import { GradeBadge } from '@/components/GradeBadge'
 import { Button } from '@/components/ui/button'
@@ -13,25 +14,23 @@ export default function History() {
   const [entries, setEntries] = useState<ScanHistoryEntry[]>(() => getScanHistory())
 
   return (
-    <div className="min-h-dvh bg-background pb-10">
-      <AppHeader
-        title="Scan history"
-        right={
-          entries.length > 0 ? (
-            <button
-              type="button"
-              aria-label="Clear scan history"
-              onClick={() => {
-                clearScanHistory()
-                setEntries([])
-              }}
-              className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-secondary active:scale-95"
-            >
-              <Trash2 className="h-5 w-5" aria-hidden="true" />
-            </button>
-          ) : undefined
-        }
-      />
+    <div className="relative min-h-dvh bg-background pb-[108px]">
+      <header className="safe-top flex items-center justify-between px-5 pb-2.5 pt-[54px]">
+        <h1 className="text-[28px] font-extrabold text-[#1A1A1A]">Scan History</h1>
+        {entries.length > 0 && (
+          <button
+            type="button"
+            aria-label="Clear scan history"
+            onClick={() => {
+              clearScanHistory()
+              setEntries([])
+            }}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/[0.06] active:scale-95"
+          >
+            <Trash2 className="h-4 w-4 text-black/60" aria-hidden="true" />
+          </button>
+        )}
+      </header>
 
       {entries.length === 0 ? (
         <EmptyState
@@ -41,7 +40,7 @@ export default function History() {
           action={<Button onClick={() => navigate('/')}>Scan a product</Button>}
         />
       ) : (
-        <div className="space-y-2 px-4 pt-2">
+        <div className="flex flex-col gap-2.5 px-[18px] pt-1">
           {entries.map((entry) => (
             <button
               key={entry.barcode}
@@ -53,27 +52,29 @@ export default function History() {
                     : `/not-found/${encodeURIComponent(entry.barcode)}`,
                 )
               }
-              className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-3 text-left active:scale-[0.99]"
+              className="flex w-full items-center gap-3 rounded-2xl border border-black/[0.06] bg-white p-3 text-left"
             >
-              {entry.imageUrl ? (
-                <img src={entry.imageUrl} alt="" className="h-14 w-14 shrink-0 rounded-xl object-cover" />
+              {entry.grade && isValidGrade(entry.grade) ? (
+                <GradeBadge grade={entry.grade} size="xs" />
               ) : (
-                <div className="h-14 w-14 shrink-0 rounded-xl bg-secondary" aria-hidden="true" />
+                <div className="flex h-[41px] w-9 shrink-0 items-center justify-center rounded-lg bg-black/[0.06] text-xs font-bold text-black/40">
+                  ?
+                </div>
               )}
               <div className="min-w-0 flex-1">
-                {entry.brandName && <p className="truncate text-xs text-muted-foreground">{entry.brandName}</p>}
-                <p className="truncate text-sm font-semibold">{entry.productName ?? `Barcode ${entry.barcode}`}</p>
-                <p className="text-xs text-muted-foreground">{new Date(entry.scannedAt).toLocaleString()}</p>
+                <div className="truncate text-sm font-bold text-[#1A1A1A]">{entry.productName ?? `Barcode ${entry.barcode}`}</div>
+                <div className="truncate text-xs text-black/45">
+                  {entry.brandName ? `${entry.brandName} · ` : ''}
+                  {relativeTime(entry.scannedAt)}
+                </div>
               </div>
-              {entry.grade && isValidGrade(entry.grade) ? (
-                <GradeBadge grade={entry.grade} size="sm" />
-              ) : (
-                <span className="shrink-0 text-xs text-muted-foreground">Not rated</span>
-              )}
+              <ChevronRight className="h-4 w-4 shrink-0 text-black/25" aria-hidden="true" />
             </button>
           ))}
         </div>
       )}
+
+      <BottomTabBar active="history" />
     </div>
   )
 }

@@ -24,15 +24,15 @@ export function gradeLabel(grade: Grade): string {
   return GRADE_LABEL[grade]
 }
 
-const GRADE_TOKEN: Record<Grade, string> = {
-  AAA: 'grade-aaa',
-  AA: 'grade-aa',
-  A: 'grade-a',
-  B: 'grade-b',
-  C: 'grade-c',
-  D: 'grade-d',
+// oklch hue per grade — AAA reads as the deepest green, D as a warm red-orange.
+const GRADE_HUES: Record<Grade, number> = { AAA: 150, AA: 135, A: 105, B: 78, C: 48, D: 22 }
+
+/** Badge fill. */
+export function gradeBg(grade: Grade): string {
+  return `oklch(0.56 0.1 ${GRADE_HUES[grade]})`
 }
 
-export function gradeColorToken(grade: Grade): string {
-  return GRADE_TOKEN[grade]
+/** Darker shade for the badge's inset-shadow bevel along its bottom edge. */
+export function gradeBevel(grade: Grade): string {
+  return `oklch(0.44 0.1 ${GRADE_HUES[grade]})`
 }

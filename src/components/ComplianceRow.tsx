@@ -1,5 +1,4 @@
-import { CheckCircle2, XCircle } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { statusChar, statusColor } from '@/lib/verdict'
 
 export function ComplianceRow({
   label,
@@ -10,19 +9,21 @@ export function ComplianceRow({
   description: string
   compliant: boolean
 }) {
-  const Icon = compliant ? CheckCircle2 : XCircle
+  const color = statusColor(compliant)
   return (
-    <div className="flex items-start gap-3 py-2.5">
-      <Icon
-        className={cn('mt-0.5 h-5 w-5 shrink-0', compliant ? 'text-verdict-verified' : 'text-verdict-misleading')}
-        aria-hidden="true"
-      />
-      <div>
-        <p className="text-sm font-medium">
-          {label}
-          <span className="sr-only">{compliant ? ' — compliant' : ' — not compliant'}</span>
+    <div className="flex items-center gap-3 py-2.5">
+      <span
+        className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-xs font-extrabold text-white"
+        style={{ background: color }}
+      >
+        {statusChar(compliant)}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[13.5px] font-bold text-[#1A1A1A]">{label}</p>
+        <p className="text-xs font-semibold" style={{ color }}>
+          {compliant ? 'Compliant' : 'Not compliant'}
         </p>
-        <p className="text-xs text-muted-foreground">{description}</p>
+        <p className="mt-0.5 text-xs text-black/45">{description}</p>
       </div>
     </div>
   )

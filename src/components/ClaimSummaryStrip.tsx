@@ -1,53 +1,46 @@
-import { CheckCircle2, AlertTriangle, HelpCircle, ChevronRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { VERDICTS } from '@/lib/verdict'
 import type { PackageClaim } from '@/types/database'
 
-export function ClaimSummaryStrip({ claims, onClick }: { claims: PackageClaim[]; onClick?: () => void }) {
-  const verified = claims.filter((c) => c.verification_status === 'verified').length
-  const misleading = claims.filter((c) => c.verification_status === 'misleading').length
-  const unverifiable = claims.filter((c) => c.verification_status === 'unverifiable').length
+function claimStripText(misleading: number, unverifiable: number, total: number): string {
+  if (misleading > 0) {
+    return `${misleading} of ${total} label claim${misleading > 1 ? "s don't" : " doesn't"} match this product`
+  }
+  if (unverifiable > 0) {
+    return `${unverifiable} of ${total} label claims can't be verified`
+  }
+  return 'All label claims verified'
+}
 
+export function ClaimSummaryStrip({ claims, onClick }: { claims: PackageClaim[]; onClick?: () => void }) {
   if (claims.length === 0) return null
 
-  const allVerified = misleading === 0 && unverifiable === 0
+  const misleading = claims.filter((c) => c.verification_status === 'misleading').length
+  const unverifiable = claims.filter((c) => c.verification_status === 'unverifiable').length
+  const worst = misleading > 0 ? 'misleading' : unverifiable > 0 ? 'unverifiable' : 'verified'
+  const v = VERDICTS[worst]
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        'flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition-colors active:scale-[0.99]',
-        misleading > 0
-          ? 'border-verdict-misleading/30 bg-verdict-misleading/8'
-          : allVerified
-            ? 'border-verdict-verified/30 bg-verdict-verified/8'
-            : 'border-verdict-unverifiable/30 bg-verdict-unverifiable/8',
-      )}
+      className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-left"
+      style={{ background: v.soft, boxShadow: `inset 0 0 0 1.5px ${v.color}` }}
     >
-      <div className="flex-1 space-y-1.5">
-        <p className="text-sm font-semibold">
-          {misleading > 0
-            ? `${misleading} package claim${misleading === 1 ? '' : 's'} flagged as misleading`
-            : allVerified
-              ? 'All package claims verified'
-              : `${unverifiable} claim${unverifiable === 1 ? '' : 's'} could not be verified`}
-        </p>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1">
-            <CheckCircle2 className="h-3.5 w-3.5 text-verdict-verified" aria-hidden="true" />
-            {verified} verified
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <AlertTriangle className="h-3.5 w-3.5 text-verdict-misleading" aria-hidden="true" />
-            {misleading} misleading
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <HelpCircle className="h-3.5 w-3.5 text-verdict-unverifiable" aria-hidden="true" />
-            {unverifiable} unverifiable
-          </span>
+      <span
+        className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-white"
+        style={{ background: v.color }}
+      >
+        {v.mark}
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="text-[10px] font-bold tracking-[0.08em] text-black/40">CLAIM CHECK</div>
+        <div className="text-[14.5px] font-bold leading-tight" style={{ color: v.color }}>
+          {claimStripText(misleading, unverifiable, claims.length)}
         </div>
       </div>
-      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+      <svg width="8" height="13" viewBox="0 0 7 12" className="shrink-0">
+        <path d="M1 1l5 5-5 5" stroke="rgba(0,0,0,0.35)" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
     </button>
   )
 }

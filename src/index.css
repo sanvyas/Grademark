@@ -4,51 +4,47 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    /* Warm off-white editorial palette — matches the GradeMark Claude Design source. */
+    --background: 45 20% 96%; /* #F7F6F3 */
+    --foreground: 0 0% 10%; /* #1A1A1A ink */
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 10%;
 
-    --primary: 222 47% 11%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 0 0% 10%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 94%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 45 12% 93%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 210 40% 94%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 45 12% 93%;
+    --muted-foreground: 0 0% 45%; /* ~ black at 55% opacity over white */
 
-    --accent: 142 71% 45%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 144 33% 37%; /* #3F7D58 */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 10 58% 44%; /* #B3452F */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 222 47% 11%;
+    /* Alpha-aware: components use border-border/[0.06] etc. to match the source's
+       translucent-black hairlines instead of a fixed opaque gray. */
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 10%;
 
     --radius: 1rem;
 
-    /* AAA (best) -> D (worst) grade scale */
-    --grade-aaa: 142 71% 40%;
-    --grade-aa: 142 66% 45%;
-    --grade-a: 84 60% 45%;
-    --grade-b: 40 96% 50%;
-    --grade-c: 25 95% 53%;
-    --grade-d: 0 72% 51%;
-
-    --verdict-verified: 142 71% 40%;
-    --verdict-misleading: 0 72% 51%;
-    --verdict-unverifiable: 40 96% 50%;
+    --verdict-verified: 144 33% 37%; /* #3F7D58 */
+    --verdict-misleading: 10 58% 44%; /* #B3452F */
+    --verdict-unverifiable: 60 3% 46%; /* #7A7A72 */
+    --status-warn: 38 60% 45%; /* #B8862E — "near limit" compliance / moderate nutrient level */
   }
 
   * {
-    @apply border-border;
+    @apply border-border/[0.06];
   }
 
   html {

@@ -1,23 +1,17 @@
 import { VerdictChip } from './VerdictChip'
-import { Card, CardContent } from './ui/card'
 import type { PackageClaim } from '@/types/database'
 
-export function ClaimCard({ claim }: { claim: PackageClaim }) {
+export function ClaimCard({ claim, index }: { claim: PackageClaim; index: number }) {
   return (
-    <Card className="animate-fade-in">
-      <CardContent className="space-y-2.5 p-4">
-        <div className="flex items-start justify-between gap-3">
-          <p className="text-sm font-semibold leading-snug">&ldquo;{claim.claim_text}&rdquo;</p>
-          <VerdictChip status={claim.verification_status} className="shrink-0" />
-        </div>
-        {claim.evidence && (
-          <p className="rounded-lg bg-secondary/70 p-2.5 text-xs leading-relaxed text-muted-foreground">
-            {claim.evidence}
-          </p>
-        )}
-        {/* TODO: claim coordinates — once bounding-box data exists on package_claims, render
-            this claim highlighted directly on the pack image instead of as a text card. */}
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-2.5 rounded-2xl border border-black/[0.07] bg-white p-4">
+      <div className="flex items-center justify-between gap-2.5">
+        <div className="text-[9.5px] font-bold tracking-[0.1em] text-black/35">CLAIM {index + 1}</div>
+        <VerdictChip status={claim.verification_status} />
+      </div>
+      <div className="text-base font-extrabold leading-snug text-[#1A1A1A]">&ldquo;{claim.claim_text}&rdquo;</div>
+      {claim.evidence && <div className="text-[13.5px] leading-relaxed text-black/70">{claim.evidence}</div>}
+      {/* TODO: claim coordinates — once bounding-box data exists on package_claims, render
+          this claim highlighted directly on the pack image instead of as a text card. */}
+    </div>
   )
 }

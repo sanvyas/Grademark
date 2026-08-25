@@ -1,39 +1,57 @@
-import { ChevronLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
+function IconButton({
+  onClick,
+  label,
+  children,
+}: {
+  onClick: () => void
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/[0.06] active:scale-95"
+    >
+      {children}
+    </button>
+  )
+}
+
+/** Small-caps section eyebrow header used on every light ("paper") screen — matches the design's RATING REPORT / INGREDIENT / COMPLIANCE style headers. */
 export function AppHeader({
   title,
   onBack,
-  transparent = false,
   right,
   className,
 }: {
   title?: string
   onBack?: () => void
-  transparent?: boolean
   right?: React.ReactNode
   className?: string
 }) {
   const navigate = useNavigate()
   return (
-    <header
-      className={cn(
-        'safe-top sticky top-0 z-20 flex h-14 items-center gap-2 px-2',
-        transparent ? 'bg-transparent' : 'border-b border-border bg-background/95 backdrop-blur',
-        className,
+    <header className={cn('safe-top sticky top-0 z-20 flex items-center justify-between px-4 pb-2 pt-3', className)}>
+      <IconButton label="Go back" onClick={() => (onBack ? onBack() : navigate(-1))}>
+        <svg width="9" height="15" viewBox="0 0 9 15" fill="none">
+          <path
+            d="M7.5 1.5L1.5 7.5l6 6"
+            stroke="rgba(0,0,0,0.6)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </IconButton>
+      {title && (
+        <div className="text-[11px] font-bold tracking-[0.08em] text-black/40">{title.toUpperCase()}</div>
       )}
-    >
-      <button
-        type="button"
-        aria-label="Go back"
-        onClick={() => (onBack ? onBack() : navigate(-1))}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-secondary active:scale-95"
-      >
-        <ChevronLeft className="h-6 w-6" aria-hidden="true" />
-      </button>
-      {title && <h1 className="flex-1 truncate text-base font-semibold">{title}</h1>}
-      {right ?? <div className="w-10" />}
+      {right ?? <div className="w-9" />}
     </header>
   )
 }
