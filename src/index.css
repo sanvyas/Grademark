@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm off-white editorial palette — matches the GradeMark Claude Design source. */
+    --background: 45 20% 96%; /* #F7F6F3 */
+    --foreground: 0 0% 10%; /* #1A1A1A ink */
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 0 0% 10%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 45 12% 93%;
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 45 12% 93%;
+    --muted-foreground: 0 0% 45%; /* ~ black at 55% opacity over white */
+
+    --accent: 144 33% 37%; /* #3F7D58 */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 10 58% 44%; /* #B3452F */
+    --destructive-foreground: 0 0% 100%;
+
+    /* Alpha-aware: components use border-border/[0.06] etc. to match the source's
+       translucent-black hairlines instead of a fixed opaque gray. */
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 10%;
+
+    --radius: 1rem;
+
+    --verdict-verified: 144 33% 37%; /* #3F7D58 */
+    --verdict-misleading: 10 58% 44%; /* #B3452F */
+    --verdict-unverifiable: 60 3% 46%; /* #7A7A72 */
+    --status-warn: 38 60% 45%; /* #B8862E — "near limit" compliance / moderate nutrient level */
+  }
+
+  * {
+    @apply border-border/[0.06];
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    height: 100%;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #root {
+    min-height: 100%;
+    min-height: 100dvh;
+  }
+}
+
+@layer utilities {
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
